@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            background-color: #f9f9ff;
+        }
+        canvas {
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="300" height="200"></canvas>
+<button type="button" id="button">output</button>
+
+<script src="https://cdn.jsdelivr.net/npm/fabric"></script>
+<script>
+    const canvas = new fabric.Canvas('canvas', {
+        backgroundColor: 'white'
+    });
+    canvas.hoverCursor = 'default';
+
+    // fabric.Image.fromURL('bg.jpg', function(img) {
+    //     img.scale(0.2);
+    //     canvas.setBackgroundImage(img)
+    // });
+    canvas.setBackgroundImage('bg.jpg', e => {
+        // e.crossOrigin = 'anonymous';
+        // canvas.renderAll()
+    });
+
+    fabric.Image.fromURL('logo.png', function(img) {
+        img.scale(0.1);
+        img.set('top', 50);
+        img.set('left', 10);
+        img.selectable = false;
+        canvas.add(img);
+    });
+
+    const text = new fabric.Text('1234567890', {
+        originX: 'left',
+        originY: 'top',
+        fill: 'blue',
+        fontSize: 14,
+        fontFamily: 'System',
+        selectable: false,
+        top: 10,
+        left: 190
+    })
+    canvas.add(text);
+
+    document.getElementById('button').addEventListener('click', function () {
+        console.info(canvas.toDataURL({
+            format: 'png',
+            multiplier: 2
+            // enableRetinaScaling: true
+        }));
+    });
+
+    // FIXME: 書き出した画像が荒い
+</script>
+</body>
+</html>
