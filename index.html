@@ -7,20 +7,17 @@
         body {
             background-color: #f9f9ff;
         }
-        canvas {
-            border-radius: 1rem;
-            box-shadow: 10px 5px 5px lightgrey;
-        }
     </style>
 </head>
 <body>
 <canvas id="canvas" width="1200" height="630"></canvas>
-<button type="button" id="button">output</button>
+<button type="button" id="output">output</button>
+<button type="button" id="download">download</button>
 
 <script src="https://cdn.jsdelivr.net/npm/fabric"></script>
 <script>
     const canvas = new fabric.Canvas('canvas', {
-        backgroundColor: 'white'
+        backgroundColor: 'transparent'
     });
     canvas.hoverCursor = 'default';
 
@@ -28,12 +25,31 @@
     //     img.scale(0.2);
     //     canvas.setBackgroundImage(img)
     // });
-    canvas.setBackgroundImage('bg.jpg', e => {
-        // e.crossOrigin = 'anonymous';
-        // canvas.renderAll()
+    // canvas.setBackgroundImage('bg.jpg', e => {
+    //     // e.crossOrigin = 'anonymous';
+    //     // canvas.renderAll()
+    // });
+
+    const rect = new fabric.Rect({
+        width: 1200,
+        height: 630,
+        left: 0,
+        top: 0,
+        fill: 'transparent',
+        rx: 50,
+        ry: 50
+    });
+    canvas.add(rect);
+
+    fabric.util.loadImage('assets/bg.jpg', function(img) {
+        rect.set('fill', new fabric.Pattern({
+            source: img,
+            repeat: 'no-repeat'
+        }));
+        canvas.renderAll();
     });
 
-    fabric.Image.fromURL('logo.png', function(img) {
+    fabric.Image.fromURL('assets/logo.png', function(img) {
         // img.scale(0.1);
         img.set('top', 50);
         img.set('left', 10);
@@ -48,12 +64,12 @@
         fontSize: 30,
         fontFamily: 'System',
         selectable: false,
-        top: 10,
-        left: 990
+        top: 25,
+        left: 970
     })
     canvas.add(text);
 
-    document.getElementById('button').addEventListener('click', function () {
+    document.getElementById('output').addEventListener('click', function () {
         console.info(canvas.toDataURL({
             format: 'jpeg',
             quality: 1
@@ -61,10 +77,15 @@
             // multiplier: 2
             // enableRetinaScaling: true
         }));
+    });
 
-        // console.info(
-        //     document.getElementById('canvas').toDataURL('image/webp', 1)
-        // );
+    document.getElementById('download').addEventListener('click', function () {
+        document.getElementById('canvas').toBlob(function(blob) {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'og.png';
+            link.click();
+        });
     });
 </script>
 </body>
